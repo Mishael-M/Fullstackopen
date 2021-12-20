@@ -1,4 +1,27 @@
 import React, { useState } from 'react';
+const SingularCountry = ({ countryInformation }) => {
+  let languagesArray = Object.values(countryInformation.languages);
+  let finalLanguageArray = [];
+
+  languagesArray.map((language) =>
+    finalLanguageArray.push(<li key={language}>{language}</li>)
+  );
+
+  return (
+    <div key={countryInformation.name.common}>
+      <h1>{countryInformation.name.common}</h1>
+      {countryInformation.capital ? (
+        <p>Capital: {countryInformation.capital[0]}</p>
+      ) : (
+        <p>No capital</p>
+      )}
+      <p>Population: {countryInformation.population}</p>
+      <h2>Languages</h2>
+      <ul key={countryInformation.name.common}>{finalLanguageArray}</ul>
+      <img src={countryInformation.flags.png} alt='Flag' />
+    </div>
+  );
+};
 
 const SingleCountryData = ({ countryInformation }) => {
   const [showCountry, setShowCountry] = useState(false);
@@ -60,25 +83,7 @@ const CountryData = ({ country, countryInformation }) => {
         );
 
         if (singleCountry.length === 1) {
-          let languagesArray = singleCountry.map((country) =>
-            Object.values(country.languages)
-          );
-          let finalLanguageArray = [];
-
-          languagesArray[0].map((language) =>
-            finalLanguageArray.push(<li key={language}>{language}</li>)
-          );
-
-          return singleCountry.map((country) => (
-            <div key={country.name.common}>
-              <h1>{country.name.common}</h1>
-              <p>Capital: {country.capital[0]} </p>
-              <p>Population: {country.population}</p>
-              <h2>Languages</h2>
-              <ul key={country.name.common}>{finalLanguageArray}</ul>
-              <img src={country.flags.png} alt='Flag' />
-            </div>
-          ));
+          return <SingularCountry countryInformation={singleCountry[0]} />;
         }
 
         return returnArray.map((country) => (
@@ -99,14 +104,7 @@ const CountryData = ({ country, countryInformation }) => {
       );
 
       return returnArray.map((country) => (
-        <div key={country.name.common}>
-          <h1>{country.name.common}</h1>
-          <p>Capital: {country.capital[0]} </p>
-          <p>Population: {country.population}</p>
-          <h2>Languages</h2>
-          <ul key={country.name.common}>{finalLanguageArray}</ul>
-          <img src={country.flags.png} alt='Flag' />
-        </div>
+        <SingularCountry countryInformation={country} />
       ));
     }
 
