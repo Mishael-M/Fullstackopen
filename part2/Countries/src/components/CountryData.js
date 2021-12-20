@@ -1,4 +1,84 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+
+const WeatherData = ({ city }) => {
+  // Save REACT_APP_OPENWEATHERMAP_API_KEY as openweather API key
+  const api_key = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
+  const [weather, setWeather] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${api_key}`
+      )
+      .then((response) => {
+        setWeather(response.data);
+      });
+  }, []);
+
+  if (weather.length !== 0) {
+    function degreeToCompass(degree) {
+      if (
+        (degree > 0 && degree < 11.25) ||
+        (degree < 360 && degree > 360 - 11.25)
+      ) {
+        return 'N';
+      } else if (degree >= 11.25 && degree < 45 - 11.25) {
+        return 'NNE';
+      } else if (degree >= 45 - 11.25 && degree < 45 + 11.25) {
+        return 'NE';
+      } else if (degree >= 45 + 11.25 && degree < 90 - 11.25) {
+        return 'ENE';
+      } else if (degree >= 90 - 11.25 && degree < 90 + 11.25) {
+        return 'E';
+      } else if (degree >= 90 + 11.25 && degree < 135 - 11.25) {
+        return 'ESE';
+      } else if (degree >= 135 - 11.25 && degree < 135 + 11.25) {
+        return 'SE';
+      } else if (degree >= 135 + 11.25 && degree < 180 - 11.25) {
+        return 'SSE';
+      } else if (degree >= 180 - 11.25 && degree < 180 + 11.25) {
+        return 'S';
+      } else if (degree >= 180 + 11.25 && degree < 225 - 11.25) {
+        return 'SSW';
+      } else if (degree >= 225 - 11.25 && degree < 225 + 11.25) {
+        return 'SW';
+      } else if (degree >= 225 + 11.25 && degree < 270 - 11.25) {
+        return 'SSW';
+      } else if (degree >= 270 - 11.25 && degree < 270 + 11.25) {
+        return 'W';
+      } else if (degree >= 270 + 11.25 && degree < 315 - 11.25) {
+        return 'WNW';
+      } else if (degree >= 315 - 11.25 && degree < 315 + 11.25) {
+        return 'NW';
+      } else {
+        return 'NNW';
+      }
+    }
+
+    return (
+      <div>
+        <h2>{`Weather of ${city}`}</h2>
+        <p>
+          <b>Temperature</b> {weather.main.temp} Celcius
+        </p>
+        <img
+          src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+          alt='Weather'
+        />
+        <p>
+          <b>
+            Wind: {weather.wind.speed * 3.6} km/hr direction{' '}
+            {degreeToCompass(`${weather.wind.deg}`)}
+          </b>
+        </p>
+      </div>
+    );
+  }
+
+  return <h2>No weather data available </h2>;
+};
+
 const SingularCountry = ({ countryInformation }) => {
   let languagesArray = Object.values(countryInformation.languages);
   let finalLanguageArray = [];
@@ -19,6 +99,11 @@ const SingularCountry = ({ countryInformation }) => {
       <h2>Languages</h2>
       <ul key={countryInformation.name.common}>{finalLanguageArray}</ul>
       <img src={countryInformation.flags.png} alt='Flag' />
+      {countryInformation.capital ? (
+        <WeatherData city={countryInformation.capital[0]} />
+      ) : (
+        <h2>No weather data available</h2>
+      )}
     </div>
   );
 };
@@ -49,6 +134,11 @@ const SingleCountryData = ({ countryInformation }) => {
         <h2>Languages</h2>
         <ul key={countryInformation.name.common}>{finalLanguageArray}</ul>
         <img src={countryInformation.flags.png} alt='Flag' />
+        {countryInformation.capital ? (
+          <WeatherData city={countryInformation.capital[0]} />
+        ) : (
+          <h2>No weather data available</h2>
+        )}
       </div>
     );
   }
