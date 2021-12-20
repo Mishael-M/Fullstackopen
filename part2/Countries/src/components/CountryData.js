@@ -83,7 +83,12 @@ const CountryData = ({ country, countryInformation }) => {
         );
 
         if (singleCountry.length === 1) {
-          return <SingularCountry countryInformation={singleCountry[0]} />;
+          return (
+            <SingularCountry
+              key={singleCountry[0].name.common}
+              countryInformation={singleCountry[0]}
+            />
+          );
         }
 
         return returnArray.map((country) => (
@@ -104,7 +109,10 @@ const CountryData = ({ country, countryInformation }) => {
       );
 
       return returnArray.map((country) => (
-        <SingularCountry countryInformation={country} />
+        <SingularCountry
+          key={country.name.common}
+          countryInformation={country}
+        />
       ));
     }
 
