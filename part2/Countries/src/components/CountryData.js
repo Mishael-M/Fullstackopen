@@ -99,15 +99,6 @@ const CountryData = ({ country, countryInformation }) => {
         ));
       }
 
-      let languagesArray = returnArray.map((country) =>
-        Object.values(country.languages)
-      );
-      let finalLanguageArray = [];
-
-      languagesArray[0].map((language) =>
-        finalLanguageArray.push(<li key={language}>{language}</li>)
-      );
-
       return returnArray.map((country) => (
         <SingularCountry
           key={country.name.common}
