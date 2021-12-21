@@ -12,6 +12,16 @@ const PersonForm = (props) => {
       number: newNumber,
     };
 
+    const updateMessage = (message, error) => {
+      props.setErrorMessage(error);
+      props.setMessage(message);
+
+      setTimeout(() => {
+        props.setErrorMessage(null);
+        props.setMessage(null);
+      }, 5000);
+    };
+
     const replacePerson = (currentPerson) => {
       if (
         window.confirm(
@@ -29,6 +39,13 @@ const PersonForm = (props) => {
                 person.id !== updatePerson[0].id ? person : returnedPerson
               )
             );
+            updateMessage(`Updated ${returnedPerson.name}`, false);
+          })
+          .catch((error) => {
+            updateMessage(
+              `Information of ${updatePerson[0].name} has already been removed from the server.`,
+              true
+            );
           });
       }
     };
@@ -41,6 +58,7 @@ const PersonForm = (props) => {
           props.setPersons(props.persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
+          updateMessage(`Added ${returnedPerson.name}`, false);
         });
   };
 

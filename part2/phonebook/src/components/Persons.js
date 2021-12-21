@@ -1,12 +1,31 @@
 import React from 'react';
 import personService from '../services/persons';
 
-const Persons = ({ persons, setPersons, filter }) => {
+const Persons = ({
+  persons,
+  setPersons,
+  filter,
+  setMessage,
+  setErrorMessage,
+}) => {
+  const updateMessage = (message, error) => {
+    setErrorMessage(error);
+    setMessage(message);
+
+    setTimeout(() => {
+      setErrorMessage(null);
+      setMessage(null);
+    }, 5000);
+  };
+
   const deletePerson = (currentPerson) => {
-    console.log(currentPerson);
     if (window.confirm(`Would you like to delete ${currentPerson.name}?`)) {
       personService.deleteResource(currentPerson.id).then(() => {
         setPersons(persons.filter((person) => person.id !== currentPerson.id));
+        updateMessage(
+          ` ${currentPerson.name} has been deleted from the server.`,
+          true
+        );
       });
     }
   };
