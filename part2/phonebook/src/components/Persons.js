@@ -21,11 +21,13 @@ const Persons = ({
   const deletePerson = (currentPerson) => {
     if (window.confirm(`Would you like to delete ${currentPerson.name}?`)) {
       personService.deleteResource(currentPerson.id).then(() => {
-        setPersons(persons.filter((person) => person.id !== currentPerson.id));
-        updateMessage(
-          ` ${currentPerson.name} has been deleted from the server.`,
-          true
-        );
+        personService.getAll().then((returnedPersons) => {
+          setPersons(returnedPersons);
+          updateMessage(
+            ` ${currentPerson.name} has been deleted from the server.`,
+            true
+          );
+        });
       });
     }
   };
