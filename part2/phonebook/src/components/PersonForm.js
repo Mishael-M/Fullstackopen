@@ -54,12 +54,18 @@ const PersonForm = (props) => {
       return personName.name === nameObject.name;
     }).length > 0
       ? replacePerson(nameObject)
-      : personService.create(nameObject).then((returnedPerson) => {
-          props.setPersons(props.persons.concat(returnedPerson));
-          setNewName('');
-          setNewNumber('');
-          updateMessage(`Added ${returnedPerson.name}`, false);
-        });
+      : personService
+          .create(nameObject)
+          .then((returnedPerson) => {
+            props.setPersons(props.persons.concat(returnedPerson));
+            setNewName('');
+            setNewNumber('');
+            updateMessage(`Added ${returnedPerson.name}`, false);
+          })
+          .catch((error) => {
+            console.log(error.response.data.error);
+            updateMessage(error.response.data.error, true);
+          });
   };
 
   const handleNameChange = (event) => {
